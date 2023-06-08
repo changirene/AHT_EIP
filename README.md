@@ -1,4 +1,4 @@
-# eip
+# AHT_EIP
 
 ## Project setup
 ```
