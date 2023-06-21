@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import {Animal} from "../model/news.model";
+// import {Animal} from "../model/news.model";
 import {redis, sequelize} from "../db_connect";
 
 
