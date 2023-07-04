@@ -1,7 +1,7 @@
 <template>
   <div class="wrap">
     <div class="card" v-for="item in cardList" :key="item.title">
-      <a :href="item.URL">
+      <a :href="item.URL" target="_blank">
         <div class="card-item">
           <img :src="require(`@/assets/images/${item.imgURL}`)">
           <h4>{{ item.title }}</h4>
