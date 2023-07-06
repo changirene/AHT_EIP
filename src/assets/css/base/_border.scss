@@ -1,0 +1,31 @@
+$border:4px solid $primary;
+$hover-border:3.5px solid $d-border;
+
+
+
+@mixin card-border{
+    border: $border;
+    border-radius: 40px 40px 0px 40px;
+    background-color: $light;
+}
+
+@mixin news-border{
+    border: $border;
+    border-radius: 40px;
+    background-color: rgba(255, 255, 255, 0.586);
+    box-shadow: 2px 2px 0px $d-border;
+
+}
+
+@mixin hover-border{
+    border: $hover-border;
+    border-radius: 100%;
+    background-color: $light;
+}
+
+@mixin popup-border{
+    background-color: #fff;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.25);
+    border-radius: 10px;
+    box-sizing: border-box;
+}

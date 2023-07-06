@@ -10,6 +10,8 @@
     "core-js": "^3.8.3",
     "vue": "^3.2.13",
     "vue-router": "^4.0.3",
+    "vue-use-paginator": "^0.4.0",
+    "vuedraggable": "^2.24.3",
     "vuex": "^4.0.0"
   },
   "devDependencies": {
