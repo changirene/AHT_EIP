@@ -1,5 +1,8 @@
 import { Table, Column, Model } from 'sequelize-typescript';
 
+
+
+
 @Table({
     tableName: 'News',
     timestamps: false
@@ -8,11 +11,17 @@ export class News extends Model {
     @Column({
       primaryKey: true
     })
-    news_id!: number;
+    NewsId!: number;
   
     @Column
-    news_add_date!: Date;
+    NewsAddDate!: string;
 
     @Column
-    news_title!: string;
+    NewsTitle!: string;
+
+    @Column
+    NewsContent!: string;
+
+    @Column
+    NewsStatus!: number;
   }

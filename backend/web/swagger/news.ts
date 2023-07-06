@@ -1,6 +1,6 @@
 /**
  * @swagger
- * /api/news:
+ * /news:
  *  get:
  *      tags:
  *        - news
@@ -49,7 +49,7 @@
 
 /**
  * @swagger
- * /api/news/content:
+ * /news/content:
  *  post:
  *      tags:
  *        - news
@@ -97,7 +97,7 @@
 
 /**
  * @swagger
- * /api/news:
+ * /news:
  *  put:
  *      tags:
  *        - news
@@ -147,7 +147,7 @@
 
 /**
  * @swagger
- * /api/news:
+ * /news:
  *  delete:
  *      tags:
  *        - news
@@ -193,7 +193,7 @@
 
 /**
  * @swagger
- * /api/news:
+ * /news:
  *  patch:
  *      tags:
  *        - news
