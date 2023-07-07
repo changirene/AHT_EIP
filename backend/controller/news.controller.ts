@@ -47,10 +47,10 @@ const putNews: (req: Request, res: Response) => Promise<void> = async (req: Requ
         let NewsId;
         const listLength: number = await redis.llen("newsTitle:list");
         if(listLength >= 168){
-            NewsId = await redis.lrange("titleAndDate:list", -1, -1); //取得下架的id
-            await redis.ltrim("titleAndDate:list", 0, 164); //只保留前165個data
+            NewsId = await redis.lrange("newsTitle:list", -1, -1); //取得下架的id
+            await redis.ltrim("newsTitle:list", 0, 164); //只保留前165個data
         }
-        await redis.lpush("titleAndDate:list", 1, 'title', 'datetime');
+        await redis.lpush("newsTitle:list", 1, 'title', 'datetime');
         await News.update( //下架news
             {
                 NewsStatus: 1
