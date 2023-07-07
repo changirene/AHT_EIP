@@ -9,7 +9,7 @@ sequelize.addModels([News]);
 
 const homepage: (req: Request, res: Response) => Promise<void> = async (req: Request, res: Response) => {
     try {      
-      res.sendFile(path.join(__dirname, "/../../dist/index.html"))
+      res.sendFile(path.join(__dirname, "/../frontend/dist/index.html"))
     } catch (err) {
       res.status(500).send({
         status: 'error',

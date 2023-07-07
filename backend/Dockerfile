@@ -1,6 +1,4 @@
-FROM node:18.16.0
-
-RUN mkdir -p /usr/src/app
+FROM node:18.16.0 
 
 WORKDIR /usr/src/app
 
@@ -9,6 +7,8 @@ COPY package.json /usr/src/app
 RUN npm install
 
 COPY . /usr/src/app
+
+COPY --from=frontend /usr/src/app/ /usr/src/app/frontend
 
 EXPOSE 3000
 

@@ -38,7 +38,7 @@ const app: any = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
-app.use(express.static(process.cwd() + "/../../dist/"))
+app.use(express.static(process.cwd() + "/frontend/dist"))
 app.get('/', homepage);
 app.use('/', newsRouter);
 
