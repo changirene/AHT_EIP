@@ -3,12 +3,33 @@ import {News} from "../model/news.model";
 import {redis, sequelize} from "../db_connect";
 sequelize.addModels([News]);
 
+interface getData{
+    newsId: number,
+    newsAddDate: string,
+    newsTitle: string
+}
+
 const getNews: (req: Request, res: Response) => Promise<void> = async (req: Request, res: Response) => {
     try{
         const result: string[] = await redis.lrange("newsTitle:list", 0, -1);
+        let newsDataArr: getData[] = [];
+        let newsDataObj: getData = {
+            newsId: parseInt(result[2], 10),
+            newsAddDate: result[0],
+            newsTitle: result[1]
+        };
+        newsDataArr.push(newsDataObj);
+        for(let i = 3; i < result.length; i += 3){
+            newsDataObj = {
+                newsId: parseInt(result[i + 2], 10),
+                newsAddDate: result[i],
+                newsTitle: result[i + 1]
+            }
+            newsDataArr.push(newsDataObj);
+        }
         const response: object = {
             status: 'success',
-            data: result
+            data: newsDataArr
         }
         res.status(200).send(response);
     }catch(err){
@@ -17,20 +38,20 @@ const getNews: (req: Request, res: Response) => Promise<void> = async (req: Requ
             message: '資料取得失敗，請重新再試一次'
         })
     }
-
 }
 
+
 const putNews: (req: Request, res: Response) => Promise<void> = async (req: Request, res: Response) => {
-    //新增 9x4
+    //新增
     try{
         let NewsId;
-        const listLength: number = await redis.llen("titleAndDate:list");
-        if(listLength >= 108){
-            NewsId = await redis.lrange("titleAndDate:list", -3, -3); //取得下架的id
-            await redis.ltrim("titleAndDate:list", 0, 104); //只保留前105個data
+        const listLength: number = await redis.llen("newsTitle:list");
+        if(listLength >= 168){
+            NewsId = await redis.lrange("titleAndDate:list", -1, -1); //取得下架的id
+            await redis.ltrim("titleAndDate:list", 0, 164); //只保留前165個data
         }
         await redis.lpush("titleAndDate:list", 1, 'title', 'datetime');
-        await News.update(
+        await News.update( //下架news
             {
                 NewsStatus: 1
             },
@@ -39,11 +60,12 @@ const putNews: (req: Request, res: Response) => Promise<void> = async (req: Requ
             }
         )
         await News.create({
-            NewsTitle: 'ab',
-            NewsContent: 'abc'
+            NewsTitle: req.body.newsTitle,
+            NewsContent: req.body.newsContent
         })
         res.status(200).send({
-            status: 'success'
+            status: 'success',
+            message: '新增成功'
         })
     }catch(err){
         res.status(500).send({
@@ -86,17 +108,17 @@ const patchNews: (req: Request, res: Response) => Promise<void> = async (req: Re
                     NewsTitle: req.body.newsTitle
                 },
                 {
-                    where: {NewsId: req.body.NewsId}
+                    where: {NewsId: req.body.newsId}
                 }
             )
         }
-        if(req.body.NewsContent){
+        if(req.body.newsContent){
             await News.update(
                 {
-                    NewsContent: req.body.NewsContent
+                    NewsContent: req.body.newsContent
                 },
                 {
-                    where: {NewsId: req.body.NewsId}
+                    where: {NewsId: req.body.newsId}
                 }
             )
         }
@@ -117,14 +139,14 @@ const postNews: (req: Request, res: Response) => Promise<void> = async (req: Req
     try{
         const result = await News.findOne({
             where: {
-              NewsId: req.body.NewsId
+              NewsId: req.body.newsId
             },
             attributes: ['NewsContent'],
           });
           
         res.status(200).send({
             status: 'success',
-            data: result})
+            newsContent: result})
     }catch(err){
         res.status(500).send({
             status: 'error',
