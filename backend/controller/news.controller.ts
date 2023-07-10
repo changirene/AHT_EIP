@@ -10,18 +10,19 @@ interface getData{
 }
 
 const getNews: (req: Request, res: Response) => Promise<void> = async (req: Request, res: Response) => {
+    //取得標題、id、時間
     try{
         const result: string[] = await redis.lrange("newsTitle:list", 0, -1);
         let newsDataArr: getData[] = [];
         let newsDataObj: getData = {
-            newsId: parseInt(result[2], 10),
+            newsId: parseInt(result[2]),
             newsAddDate: result[0],
             newsTitle: result[1]
         };
         newsDataArr.push(newsDataObj);
         for(let i = 3; i < result.length; i += 3){
             newsDataObj = {
-                newsId: parseInt(result[i + 2], 10),
+                newsId: parseInt(result[i + 2]),
                 newsAddDate: result[i],
                 newsTitle: result[i + 1]
             }
@@ -44,25 +45,29 @@ const getNews: (req: Request, res: Response) => Promise<void> = async (req: Requ
 const putNews: (req: Request, res: Response) => Promise<void> = async (req: Request, res: Response) => {
     //新增
     try{
-        let NewsId;
+        let newsId;
+        const redisTotalCount: number = 168;
         const listLength: number = await redis.llen("newsTitle:list");
-        if(listLength >= 168){
-            NewsId = await redis.lrange("newsTitle:list", -1, -1); //取得下架的id
+        if(listLength >= redisTotalCount){
+            newsId = await redis.lrange("newsTitle:list", -1, -1); //取得下架的id
             await redis.ltrim("newsTitle:list", 0, 164); //只保留前165個data
+
+            await News.update( //下架news
+                {
+                    NewsStatus: 1
+                },
+                {
+                    where: {NewsId: newsId}
+                }
+            )
         }
-        await redis.lpush("newsTitle:list", 1, 'title', 'datetime');
-        await News.update( //下架news
-            {
-                NewsStatus: 1
-            },
-            {
-                where: {NewsId: NewsId}
-            }
-        )
-        await News.create({
+
+        const createdNews  = await News.create({
             NewsTitle: req.body.newsTitle,
             NewsContent: req.body.newsContent
         })
+        const { NewsId, NewsAddDate } = createdNews;
+        await redis.lpush("newsTitle:list", NewsId, req.body.newsTitle, NewsAddDate);
         res.status(200).send({
             status: 'success',
             message: '新增成功'
@@ -77,14 +82,15 @@ const putNews: (req: Request, res: Response) => Promise<void> = async (req: Requ
 
 const deleteNews: (req: Request, res: Response) => Promise<void> = async (req: Request, res: Response) => {
     //delete mysql's data and redis's data
-    //把刪除的redis data從mysql裡補上
     try{
         await News.destroy({
             where: {
-                NewsId: 2
+                NewsId: parseInt(req.body.newsId)
             }
         })
-
+        const results: string[] = await redis.lrange("newsTitle:list", 0, -1);
+        const resultIndex: number = results.indexOf(`${req.body.newsId}`);
+        await redis.ltrim("newsTitle:list", resultIndex-2, resultIndex); //從redis刪除值
         
         res.status(200).send({
             status: 'success',
@@ -111,6 +117,9 @@ const patchNews: (req: Request, res: Response) => Promise<void> = async (req: Re
                     where: {NewsId: req.body.newsId}
                 }
             )
+            const results: string[] = await redis.lrange("newsTitle:list", 0, -1);
+            const titleIndex: number = results.indexOf(`${req.body.newsId}`) - 1;
+            await redis.lset("newsTitle:list", titleIndex, req.body.newsTitle); //更新redis title
         }
         if(req.body.newsContent){
             await News.update(
