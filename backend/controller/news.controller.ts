@@ -1,7 +1,9 @@
 import { Request, Response } from 'express';
 import {News} from "../model/news.model";
 import {redis, sequelize} from "../db_connect";
+import moment from 'moment-timezone';
 sequelize.addModels([News]);
+moment.tz.setDefault('Asia/Taipei');
 
 interface getData{
     newsId: number,
@@ -61,13 +63,15 @@ const putNews: (req: Request, res: Response) => Promise<void> = async (req: Requ
                 }
             )
         }
-
+	const currentTime = moment();
+	const date = currentTime.format().substring(0,10) + " " + currentTime.format().substring(11,19);
         const createdNews  = await News.create({
+	    NewsAddDate: date,
             NewsTitle: req.body.newsTitle,
             NewsContent: req.body.newsContent
         })
         const { NewsId, NewsAddDate } = createdNews;
-        await redis.lpush("newsTitle:list", NewsId, req.body.newsTitle, NewsAddDate);
+        await redis.lpush("newsTitle:list", createdNews.NewsId, req.body.newsTitle, date);
         res.status(200).send({
             status: 'success',
             message: '新增成功'
@@ -90,7 +94,12 @@ const deleteNews: (req: Request, res: Response) => Promise<void> = async (req: R
         })
         const results: string[] = await redis.lrange("newsTitle:list", 0, -1);
         const resultIndex: number = results.indexOf(`${req.body.newsId}`);
-        await redis.ltrim("newsTitle:list", resultIndex-2, resultIndex); //從redis刪除值
+        const start = resultIndex - 2;
+        const end = resultIndex;
+        const valuesToRemove = await redis.lrange("newsTitle:list", start, end);
+        for (const value of valuesToRemove) {
+            await redis.lrem("newsTitle:list", 1, value);
+        }
         
         res.status(200).send({
             status: 'success',

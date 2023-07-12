@@ -1,6 +1,6 @@
 import { Table, Column, Model } from 'sequelize-typescript';
-
-
+import { DataTypes } from 'sequelize';
+import { Sequelize } from 'sequelize-typescript';
 
 
 @Table({
@@ -9,11 +9,15 @@ import { Table, Column, Model } from 'sequelize-typescript';
 })
 export class News extends Model {
     @Column({
-      primaryKey: true
+      primaryKey: true,
+      autoIncrement: true
     })
     NewsId!: number;
   
-    @Column
+    @Column({
+      defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+      allowNull: false
+    })
     NewsAddDate!: string;
 
     @Column
@@ -25,3 +29,9 @@ export class News extends Model {
     @Column
     NewsStatus!: number;
   }
+
+
+
+
+
+
