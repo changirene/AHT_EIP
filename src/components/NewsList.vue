@@ -48,7 +48,8 @@
           <p class="popup-date">{{ popupData.newsAddDate }}</p>
         </div>
         <div class="popup-content">
-          <p v-html="popupContent.newsContent"></p>
+          <p v-html="popupData.newsContent"></p>
+          <!-- <p v-html="popupContent.newsContent"></p> -->
           <!-- 在需要換行的地方加入<br> -->
         </div>
         <button type="button" @click="close()">關閉</button>
