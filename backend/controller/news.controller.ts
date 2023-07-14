@@ -2,6 +2,8 @@ import { Request, Response } from 'express';
 import {News} from "../model/news.model";
 import {redis, sequelize} from "../db_connect";
 import moment from 'moment-timezone';
+import axoios from 'axios';
+const { literal,fn } = require('sequelize');
 sequelize.addModels([News]);
 moment.tz.setDefault('Asia/Taipei');
 
@@ -14,25 +16,38 @@ interface getData{
 const getNews: (req: Request, res: Response) => Promise<void> = async (req: Request, res: Response) => {
     //取得標題、id、時間
     try{
-        const result: string[] = await redis.lrange("newsTitle:list", 0, -1);
-        let newsDataArr: getData[] = [];
-        let newsDataObj: getData = {
-            newsId: parseInt(result[2]),
-            newsAddDate: result[0],
-            newsTitle: result[1]
-        };
-        newsDataArr.push(newsDataObj);
-        for(let i = 3; i < result.length; i += 3){
-            newsDataObj = {
-                newsId: parseInt(result[i + 2]),
-                newsAddDate: result[i],
-                newsTitle: result[i + 1]
-            }
-            newsDataArr.push(newsDataObj);
-        }
+        const result = await News.findAll({
+            where: {
+                NewsStatus: 0
+            },
+            attributes: [
+                'NewsId', 
+                'NewsTitle', 
+                [literal('SUBSTRING(NewsAddDate, 1, 10)'), 'NewsAddDate'],
+                'NewsContent'
+            ],
+            order: [['NewsId', 'DESC']]
+        });
+   
+        // const result: string[] = await redis.lrange("newsTitle:list", 0, -1);
+        // let newsDataArr: getData[] = [];
+        // let newsDataObj: getData = {
+        //     newsId: parseInt(result[2]),
+        //     newsAddDate: result[0],
+        //     newsTitle: result[1]
+        // };
+        // newsDataArr.push(newsDataObj);
+        // for(let i = 3; i < result.length; i += 3){
+        //     newsDataObj = {
+        //         newsId: parseInt(result[i + 2]),
+        //         newsAddDate: result[i],
+        //         newsTitle: result[i + 1]
+        //     }
+        //     newsDataArr.push(newsDataObj);
+        // }
         const response: object = {
             status: 'success',
-            data: newsDataArr
+            data: result
         }
         res.status(200).send(response);
     }catch(err){
@@ -48,30 +63,30 @@ const putNews: (req: Request, res: Response) => Promise<void> = async (req: Requ
     //新增
     try{
         let newsId;
-        const redisTotalCount: number = 168;
-        const listLength: number = await redis.llen("newsTitle:list");
-        if(listLength >= redisTotalCount){
-            newsId = await redis.lrange("newsTitle:list", -1, -1); //取得下架的id
-            await redis.ltrim("newsTitle:list", 0, 164); //只保留前165個data
+        // const redisTotalCount: number = 168;
+        // const listLength: number = await redis.llen("newsTitle:list");
+        // if(listLength >= redisTotalCount){
+        //     newsId = await redis.lrange("newsTitle:list", -1, -1); //取得下架的id
+        //     await redis.ltrim("newsTitle:list", 0, 164); //只保留前165個data
 
-            await News.update( //下架news
-                {
-                    NewsStatus: 1
-                },
-                {
-                    where: {NewsId: newsId}
-                }
-            )
-        }
-	const currentTime = moment();
-	const date = currentTime.format().substring(0,10) + " " + currentTime.format().substring(11,19);
+        await News.update( //下架news
+            {
+                NewsStatus: 1
+            },
+            {
+                where: {NewsId: newsId}
+            }
+        )
+        // }
+	    const currentTime = moment();
+	    const date = currentTime.format().substring(0,10) + " " + currentTime.format().substring(11,19);
         const createdNews  = await News.create({
 	    NewsAddDate: date,
             NewsTitle: req.body.newsTitle,
             NewsContent: req.body.newsContent
         })
         const { NewsId, NewsAddDate } = createdNews;
-        await redis.lpush("newsTitle:list", createdNews.NewsId, req.body.newsTitle, date);
+        // await redis.lpush("newsTitle:list", createdNews.NewsId, req.body.newsTitle, date);
         res.status(200).send({
             status: 'success',
             message: '新增成功'
@@ -92,14 +107,14 @@ const deleteNews: (req: Request, res: Response) => Promise<void> = async (req: R
                 NewsId: parseInt(req.body.newsId)
             }
         })
-        const results: string[] = await redis.lrange("newsTitle:list", 0, -1);
-        const resultIndex: number = results.indexOf(`${req.body.newsId}`);
-        const start = resultIndex - 2;
-        const end = resultIndex;
-        const valuesToRemove = await redis.lrange("newsTitle:list", start, end);
-        for (const value of valuesToRemove) {
-            await redis.lrem("newsTitle:list", 1, value);
-        }
+        // const results: string[] = await redis.lrange("newsTitle:list", 0, -1);
+        // const resultIndex: number = results.indexOf(`${req.body.newsId}`);
+        // const start = resultIndex - 2;
+        // const end = resultIndex;
+        // const valuesToRemove = await redis.lrange("newsTitle:list", start, end);
+        // for (const value of valuesToRemove) {
+        //     await redis.lrem("newsTitle:list", 1, value);
+        // }
         
         res.status(200).send({
             status: 'success',
@@ -126,9 +141,9 @@ const patchNews: (req: Request, res: Response) => Promise<void> = async (req: Re
                     where: {NewsId: req.body.newsId}
                 }
             )
-            const results: string[] = await redis.lrange("newsTitle:list", 0, -1);
-            const titleIndex: number = results.indexOf(`${req.body.newsId}`) - 1;
-            await redis.lset("newsTitle:list", titleIndex, req.body.newsTitle); //更新redis title
+            // const results: string[] = await redis.lrange("newsTitle:list", 0, -1);
+            // const titleIndex: number = results.indexOf(`${req.body.newsId}`) - 1;
+            // await redis.lset("newsTitle:list", titleIndex, req.body.newsTitle); //更新redis title
         }
         if(req.body.newsContent){
             await News.update(
