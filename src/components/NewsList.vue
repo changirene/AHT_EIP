@@ -4,10 +4,10 @@
       <div class="news-title">
         <h2>公告事項</h2>
       </div>
-      <div class="news-content" v-for="item in list" :key="item.newsId">
-        <p class="news-date">{{ item.newsAddDate }}</p>
-        <h3 class="news-subject" @click="open(item.newsId)">{{ item.newsTitle }}</h3>
-        <button type="button" id="open" class="news-more" @click="open(item.newsId)">
+      <div class="news-content" v-for="item in list" :key="item.NewsId">
+        <p class="news-date">{{ item.NewsAddDate }}</p>
+        <h3 class="news-subject" @click="open(item.NewsId)">{{ item.NewsTitle }}</h3>
+        <button type="button" id="open" class="news-more" @click="open(item.NewsId)">
           ...more
         </button>
       </div>
@@ -44,11 +44,11 @@
     <div class="popup-container" @click.self="close()">
       <div class="popup-body">
         <div class="popup-title">
-          <h3 class="popup-subject">{{ popupData.newsTitle }}</h3>
-          <p class="popup-date">{{ popupData.newsAddDate }}</p>
+          <h3 class="popup-subject">{{ popupData.NewsTitle }}</h3>
+          <p class="popup-date">{{ popupData.NewsAddDate }}</p>
         </div>
         <div class="popup-content">
-          <p v-html="popupData.newsContent"></p>
+          <p v-html="popupData.NewsContent"></p>
           <!-- <p v-html="popupContent.newsContent"></p> -->
           <!-- 在需要換行的地方加入<br> -->
         </div>
@@ -110,18 +110,18 @@ export default {
       };
     },
     popupData() {
-      return this.newsList.find((n) => n.newsId === this.activeId) || {};
+      return this.newsList.find((n) => n.NewsId === this.activeId) || {};
     },
-    popupContent(){
-      return this.Content.find((n)=>n.newsId === this.activeId) || {};
-    }
+    // popupContent(){
+    //   return this.Content.find((n)=>n.NewsId === this.activeId) || {};
+    // }
 
   },
   mounted() {
     axios.get(`${url}/news`)
       .then((res) => {
         this.newsList = res.data.data; // 將 API 回傳的資料指派給 newsList 陣列
-        // console.log(this.newsList);
+        console.log(this.newsList);
         let pagesAmount = Math.ceil(this.newsList.length / this.perPage);
         for (let i = 1; i <= pagesAmount; i++) {
           this.pages.push(i);
