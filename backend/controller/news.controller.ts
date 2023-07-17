@@ -76,7 +76,8 @@ const putNews: (req: Request, res: Response) => Promise<void> = async (req: Requ
                 [literal('SUM(NewsStatus=0)'), 'NewsStatus']
             ], 
         })
-        if(newsStatusNum.dataValues.NewsId >= 56){
+
+        if(newsStatusNum.dataValues.NewsStatus >= 56){
             newsId = await News.findOne({
                 where:{
                     NewsStatus:0
@@ -95,12 +96,7 @@ const putNews: (req: Request, res: Response) => Promise<void> = async (req: Requ
                     where: {NewsId: newsId.dataValues.NewsId}
                 }
             )
-
         }
-
-
-
-       
 	    const currentTime = moment();
 	    const date = currentTime.format().substring(0,10) + " " + currentTime.format().substring(11,19);
         const createdNews  = await News.create({
