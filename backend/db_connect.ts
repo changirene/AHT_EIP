@@ -3,10 +3,10 @@ import { Sequelize } from 'sequelize-typescript';
 import Redis from 'ioredis';
 dotenv.config();
 
-const redis:Redis = new Redis({
-    host: process.env.RedisHost, 
-    port: 6379, 
-});
+// const redis:Redis = new Redis({
+//     host: process.env.RedisHost, 
+//     port: 6379, 
+// });
 
 
 const sequelize: Sequelize = new Sequelize(process.env.MysqlDatabase as string, 'root', process.env.MysqlPassword, {
@@ -21,4 +21,4 @@ const sequelize: Sequelize = new Sequelize(process.env.MysqlDatabase as string, 
   });
 
 
-export{sequelize, redis};
+export{sequelize};

@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import {News} from "../model/news.model";
-import {redis, sequelize} from "../db_connect";
+import {sequelize} from "../db_connect";
 import dotenv from 'dotenv';
 import path from "path";
 dotenv.config();

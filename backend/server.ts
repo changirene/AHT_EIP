@@ -1,5 +1,5 @@
 import express from 'express';
-import {redis, sequelize} from "./db_connect";
+import {sequelize} from "./db_connect";
 import {newsRouter} from "./router/news.router";
 import {homepage} from "./controller/homepage.controller";
 import swaggerJsDoc from 'swagger-jsdoc';

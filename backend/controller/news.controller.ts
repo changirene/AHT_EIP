@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import {News} from "../model/news.model";
-import {redis, sequelize} from "../db_connect";
+import {sequelize} from "../db_connect";
 import moment from 'moment-timezone';
 import axoios from 'axios';
 const { literal,fn } = require('sequelize');
@@ -64,22 +64,43 @@ const putNews: (req: Request, res: Response) => Promise<void> = async (req: Requ
     //新增
     try{
         res.setHeader('Access-Control-Allow-Origin', '*');
-        let newsId;
+        let newsId: any;
         // const redisTotalCount: number = 168;
         // const listLength: number = await redis.llen("newsTitle:list");
         // if(listLength >= redisTotalCount){
         //     newsId = await redis.lrange("newsTitle:list", -1, -1); //取得下架的id
         //     await redis.ltrim("newsTitle:list", 0, 164); //只保留前165個data
+        let newsStatusNum: any;
+        newsStatusNum = await News.findOne({
+            attributes: [
+                [literal('SUM(NewsStatus=0)'), 'NewsStatus']
+            ], 
+        })
+        if(newsStatusNum.dataValues.NewsId >= 56){
+            newsId = await News.findOne({
+                where:{
+                    NewsStatus:0
+                },
+                attributes: [
+                    [literal('MIN(NewsId)'), 'NewsId']
+                ], 
+                
+            })
 
-        await News.update( //下架news
-            {
-                NewsStatus: 1
-            },
-            {
-                where: {NewsId: newsId}
-            }
-        )
-        // }
+            await News.update( //下架news
+                {
+                    NewsStatus: 1
+                },
+                {
+                    where: {NewsId: newsId.dataValues.NewsId}
+                }
+            )
+
+        }
+
+
+
+       
 	    const currentTime = moment();
 	    const date = currentTime.format().substring(0,10) + " " + currentTime.format().substring(11,19);
         const createdNews  = await News.create({
