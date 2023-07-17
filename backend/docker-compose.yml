@@ -1,0 +1,20 @@
+version: '3'
+services:
+  nginx:
+    build: ./nginx
+    depends_on:
+      - web
+    ports:
+      - 80:80
+
+  redis:
+    image: redis
+    ports:
+      - 6379:6379
+  
+  web:
+    restart: on-failure
+    build: ./web
+    ports:
+      - 3000:3000
+  
