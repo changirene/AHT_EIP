@@ -3,7 +3,7 @@ services:
   nginx:
     build: ./nginx
     depends_on:
-      - web
+      - backend
     ports:
       - 80:80
 
@@ -12,9 +12,13 @@ services:
     ports:
       - 6379:6379
   
-  web:
-    restart: on-failure
-    build: ./web
+  frontend:
+    image: frontend 
+  
+  
+  backend:
+    image: backend
     ports:
       - 3000:3000
   
+
