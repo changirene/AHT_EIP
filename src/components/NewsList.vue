@@ -107,17 +107,12 @@ export default {
   mounted() {
     axios.get(`${url}/news`)
       .then((res) => {
-        // const filteredData = res.data.data.filter(data => data.NewsStatus === '1');
-        // this.newsList = filteredData.slice(0, 28);
-        this.newsList = res.data.data.slice(0, 28);
-        console.log(this.newsList);
+        const filteredData = res.data.data.filter(data => data.NewsStatus === 1);
+        this.newsList = filteredData.slice(0, 28);
+        console.log(typeof(this.newsList));
         let pagesAmount = Math.ceil(this.newsList.length / this.perPage);
         for (let i = 1; i <= pagesAmount; i++) {
           this.pages.push(i);
-        }
-
-        if (this.newsList.length <= 14) {
-          this.pages = 0;
         }
 
         this.setPage(1);
