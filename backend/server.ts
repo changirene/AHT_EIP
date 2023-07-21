@@ -10,7 +10,7 @@ import path from "path";
 import * as swaggerUi from 'swagger-ui-express';
 import dotenv from "dotenv";
 import { Request, Response } from 'express';
-
+import cors from 'cors';
 
 dotenv.config();
 sequelize.addModels([News]);
@@ -42,7 +42,7 @@ app.use(express.static(process.cwd() + "/frontend/dist"))
 app.get('/', homepage);
 app.use('/', managementInterfaceRouter)
 app.use('/', newsRouter);
-
+app.use(cors());
 
 
 process.on('uncaughtException', (err, origin) => {
