@@ -35,6 +35,7 @@ const swaggerOptions = {
 const swaggerDocs = swaggerJsDoc(swaggerOptions);
 
 const app: any = express();
+app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
@@ -42,7 +43,7 @@ app.use(express.static(process.cwd() + "/frontend/dist"))
 app.get('/', homepage);
 app.use('/', managementInterfaceRouter)
 app.use('/', newsRouter);
-app.use(cors());
+
 
 
 process.on('uncaughtException', (err, origin) => {
