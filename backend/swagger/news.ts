@@ -4,7 +4,7 @@
  *  get:
  *      tags:
  *        - news
- *      description: 取得消息動態的標題
+ *      description: 取得消息動態的標題，越上面的資料越新
  *      responses:
  *          "200":
  *             description: 請求成功，成功取得消息動態的標題
@@ -30,6 +30,12 @@
  *                           newsTitle:
  *                             type: string
  *                             example: "這是消息動態的標題"
+ *                           newsContent:
+ *                             type: string
+ *                             example: "這是消息動態的內容"
+ *                           newsStatus:
+ *                             type: int
+ *                             example: 0
  *            
  *          "500":
  *             description: 伺服器內部錯誤，取得資料失敗
@@ -47,52 +53,52 @@
  */
 
 
-/**
- * @swagger
- * /news/content:
- *  post:
- *      tags:
- *        - news
- *      description: 取得消息動態的內容
- *      requestBody:
- *        required: true
- *        content:
- *          application/json:
- *            schema:
- *              type: object
- *              properties:
- *                newsId:
- *                  type: int
- *                  example: 1
- *      responses:
- *          "200":
- *             description: 請求成功，成功取得消息動態的內容
- *             content:
- *               application/json:
- *                 schema:
- *                   type: object
- *                   properties:
- *                     status:
- *                       type: string
- *                       example: "success"
- *                     newsContent: 
- *                       type: string
- *                       example: "這是消息內容"
- *            
- *          "500":
- *             description: 伺服器內部錯誤，取得資料失敗
- *             content:
- *               application/json:
- *                 schema:
- *                   type: object
- *                   properties:
- *                     status:
- *                       type: string
- *                       example: "error"
- *                     message:
- *                       type: string
- *                       example: "內部伺服器出現錯誤"
- */
+// /**
+//  * @swagger
+//  * /news/content:
+//  *  post:
+//  *      tags:
+//  *        - news
+//  *      description: 取得消息動態的內容
+//  *      requestBody:
+//  *        required: true
+//  *        content:
+//  *          application/json:
+//  *            schema:
+//  *              type: object
+//  *              properties:
+//  *                newsId:
+//  *                  type: int
+//  *                  example: 1
+//  *      responses:
+//  *          "200":
+//  *             description: 請求成功，成功取得消息動態的內容
+//  *             content:
+//  *               application/json:
+//  *                 schema:
+//  *                   type: object
+//  *                   properties:
+//  *                     status:
+//  *                       type: string
+//  *                       example: "success"
+//  *                     newsContent: 
+//  *                       type: string
+//  *                       example: "這是消息內容"
+//  *            
+//  *          "500":
+//  *             description: 伺服器內部錯誤，取得資料失敗
+//  *             content:
+//  *               application/json:
+//  *                 schema:
+//  *                   type: object
+//  *                   properties:
+//  *                     status:
+//  *                       type: string
+//  *                       example: "error"
+//  *                     message:
+//  *                       type: string
+//  *                       example: "內部伺服器出現錯誤"
+//  */
 
 
 /**
@@ -200,7 +206,7 @@
  *
  *      description: 編輯消息動態
  *      requestBody:
- *        description: 取得要編輯的id和內容(newsId是必要的，newsTitle和newsContent可擇一即可)
+ *        description: 取得要編輯的id和內容和上架狀態(newsId是必要的，newsTitle和newsContent和newsStatus可擇一或擇二或全選都可)
  *        required: false
  *        content:
  *          application/json:
@@ -216,6 +222,9 @@
  *                 newsContent:
  *                   type: string
  *                   example: "編輯的內容"
+ *                 newsStatus:
+ *                   type: int
+ *                   example: 0
  *                 
  *      responses:
  *          "200":

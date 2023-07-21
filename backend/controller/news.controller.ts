@@ -1,10 +1,8 @@
 import { Request, Response } from 'express';
 import {News} from "../model/news.model";
-import {sequelize} from "../db_connect";
 import moment from 'moment-timezone';
-import axoios from 'axios';
 const { literal,fn } = require('sequelize');
-sequelize.addModels([News]);
+// sequelize.addModels([News]);
 moment.tz.setDefault('Asia/Taipei');
 
 interface getData{
@@ -18,14 +16,12 @@ const getNews: (req: Request, res: Response) => Promise<void> = async (req: Requ
     try{
         res.setHeader('Access-Control-Allow-Origin', '*');
         const result = await News.findAll({
-            where: {
-                NewsStatus: 0
-            },
             attributes: [
                 'NewsId', 
                 'NewsTitle', 
                 [literal('SUBSTRING(NewsAddDate, 1, 10)'), 'NewsAddDate'],
-                'NewsContent'
+                'NewsContent',
+                'NewsStatus'
             ],
             order: [['NewsId', 'DESC']]
         });
@@ -64,43 +60,43 @@ const putNews: (req: Request, res: Response) => Promise<void> = async (req: Requ
     //新增
     try{
         res.setHeader('Access-Control-Allow-Origin', '*');
-        let newsId: any;
+        // let newsId: any;
         // const redisTotalCount: number = 168;
         // const listLength: number = await redis.llen("newsTitle:list");
         // if(listLength >= redisTotalCount){
         //     newsId = await redis.lrange("newsTitle:list", -1, -1); //取得下架的id
         //     await redis.ltrim("newsTitle:list", 0, 164); //只保留前165個data
-        let newsStatusNum: any;
-        newsStatusNum = await News.findOne({
-            attributes: [
-                [literal('SUM(NewsStatus=0)'), 'NewsStatus']
-            ], 
-        })
+        // let newsStatusNum: any;
+        // newsStatusNum = await News.findOne({
+        //     attributes: [
+        //         [literal('SUM(NewsStatus=0)'), 'NewsStatus']
+        //     ], 
+        // })
 
-        if(newsStatusNum.dataValues.NewsStatus >= 56){
-            newsId = await News.findOne({
-                where:{
-                    NewsStatus:0
-                },
-                attributes: [
-                    [literal('MIN(NewsId)'), 'NewsId']
-                ], 
+        // if(newsStatusNum.dataValues.NewsStatus >= 56){
+        //     newsId = await News.findOne({
+        //         where:{
+        //             NewsStatus:0
+        //         },
+        //         attributes: [
+        //             [literal('MIN(NewsId)'), 'NewsId']
+        //         ], 
                 
-            })
+        //     })
 
-            await News.update( //下架news
-                {
-                    NewsStatus: 1
-                },
-                {
-                    where: {NewsId: newsId.dataValues.NewsId}
-                }
-            )
-        }
+        //     await News.update( //下架news
+        //         {
+        //             NewsStatus: 1
+        //         },
+        //         {
+        //             where: {NewsId: newsId.dataValues.NewsId}
+        //         }
+        //     )
+        // }
 	    const currentTime = moment();
 	    const date = currentTime.format().substring(0,10) + " " + currentTime.format().substring(11,19);
         const createdNews  = await News.create({
-	    NewsAddDate: date,
+            NewsAddDate: date,
             NewsTitle: req.body.newsTitle,
             NewsContent: req.body.newsContent
         })
@@ -170,6 +166,16 @@ const patchNews: (req: Request, res: Response) => Promise<void> = async (req: Re
             await News.update(
                 {
                     NewsContent: req.body.newsContent
+                },
+                {
+                    where: {NewsId: req.body.newsId}
+                }
+            )
+        }
+        if(req.body.newsStatus != undefined){
+            await News.update(
+                {
+                    NewsStatus: req.body.newsStatus
                 },
                 {
                     where: {NewsId: req.body.newsId}

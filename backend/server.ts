@@ -1,8 +1,9 @@
 import express from 'express';
-import {sequelize} from "./db_connect";
 import {newsRouter} from "./router/news.router";
 import {homepage} from "./controller/homepage.controller";
+import {managementInterfaceRouter} from "./router/managementInterface.router";
 import swaggerJsDoc from 'swagger-jsdoc';
+import {sequelize} from "./db_connect";
 import {News} from "./model/news.model";
 import * as bodyParser from 'body-parser';
 import path from "path";
@@ -12,7 +13,7 @@ import { Request, Response } from 'express';
 
 
 dotenv.config();
-
+sequelize.addModels([News]);
 
 const swaggerOptions = {
     definition: {
@@ -34,12 +35,12 @@ const swaggerOptions = {
 const swaggerDocs = swaggerJsDoc(swaggerOptions);
 
 const app: any = express();
-// sequelize.addModels([Animal]);
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 app.use(express.static(process.cwd() + "/frontend/dist"))
 app.get('/', homepage);
+app.use('/', managementInterfaceRouter)
 app.use('/', newsRouter);
 
 
