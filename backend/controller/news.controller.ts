@@ -97,8 +97,8 @@ const putNews: (req: Request, res: Response) => Promise<void> = async (req: Requ
 	    const date = currentTime.format().substring(0,10) + " " + currentTime.format().substring(11,19);
         const createdNews  = await News.create({
             NewsAddDate: date,
-            NewsTitle: req.body.newsTitle,
-            NewsContent: req.body.newsContent
+            NewsTitle: req.body.NewsTitle,
+            NewsContent: req.body.NewsContent
         })
         const { NewsId, NewsAddDate } = createdNews;
         // await redis.lpush("newsTitle:list", createdNews.NewsId, req.body.newsTitle, date);
@@ -120,7 +120,7 @@ const deleteNews: (req: Request, res: Response) => Promise<void> = async (req: R
         res.setHeader('Access-Control-Allow-Origin', '*');
         await News.destroy({
             where: {
-                NewsId: parseInt(req.body.newsId)
+                NewsId: parseInt(req.body.NewsId)
             }
         })
         // const results: string[] = await redis.lrange("newsTitle:list", 0, -1);
@@ -149,36 +149,36 @@ const patchNews: (req: Request, res: Response) => Promise<void> = async (req: Re
     //編輯
     try{
         res.setHeader('Access-Control-Allow-Origin', '*');
-        if(req.body.newsTitle){
+        if(req.body.NewsTitle){
             await News.update(
                 {
-                    NewsTitle: req.body.newsTitle
+                    NewsTitle: req.body.NewsTitle
                 },
                 {
-                    where: {NewsId: req.body.newsId}
+                    where: {NewsId: req.body.NewsId}
                 }
             )
             // const results: string[] = await redis.lrange("newsTitle:list", 0, -1);
             // const titleIndex: number = results.indexOf(`${req.body.newsId}`) - 1;
             // await redis.lset("newsTitle:list", titleIndex, req.body.newsTitle); //更新redis title
         }
-        if(req.body.newsContent){
+        if(req.body.NewsContent){
             await News.update(
                 {
-                    NewsContent: req.body.newsContent
+                    NewsContent: req.body.NewsContent
                 },
                 {
-                    where: {NewsId: req.body.newsId}
+                    where: {NewsId: req.body.NewsId}
                 }
             )
         }
-        if(req.body.newsStatus != undefined){
+        if(req.body.NewsStatus != undefined){
             await News.update(
                 {
-                    NewsStatus: req.body.newsStatus
+                    NewsStatus: req.body.NewsStatus
                 },
                 {
-                    where: {NewsId: req.body.newsId}
+                    where: {NewsId: req.body.NewsId}
                 }
             )
         }
@@ -200,7 +200,7 @@ const postNews: (req: Request, res: Response) => Promise<void> = async (req: Req
         res.setHeader('Access-Control-Allow-Origin', '*');
         const result = await News.findOne({
             where: {
-              NewsId: req.body.newsId
+              NewsId: req.body.NewsId
             },
             attributes: ['NewsContent'],
           });
