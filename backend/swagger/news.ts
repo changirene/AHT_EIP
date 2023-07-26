@@ -21,19 +21,19 @@
  *                       items:
  *                         type: object
  *                         properties:
- *                           newsId: 
+ *                           NewsId: 
  *                             type: int
  *                             example: 1
- *                           newsAddDate: 
+ *                           NewsAddDate: 
  *                             type: string
  *                             example: "2023-06-21 11:57:30"
- *                           newsTitle:
+ *                           NewsTitle:
  *                             type: string
  *                             example: "這是消息動態的標題"
- *                           newsContent:
+ *                           NewsContent:
  *                             type: string
  *                             example: "這是消息動態的內容"
- *                           newsStatus:
+ *                           NewsStatus:
  *                             type: int
  *                             example: 0
  *            
@@ -117,10 +117,10 @@
  *            schema:
  *              type: object
  *              properties:
- *                newsTitle:
+ *                NewsTitle:
  *                  type: string
  *                  example: "這是要新增的標題"
- *                newsContent:
+ *                NewsContent:
  *                  type: string
  *                  example: "這是要新增的內容"
  *      responses:
@@ -167,7 +167,7 @@
  *            schema:
  *              type: object
  *              properties:
- *                newsId:
+ *                NewsId:
  *                  type: int
  *                  example: 1
  *      responses:
@@ -213,16 +213,16 @@
  *            schema:
  *              type: object
  *              properties:
- *                 newsId:
+ *                 NewsId:
  *                   type: int
  *                   example: 1
- *                 newsTitle:
+ *                 NewsTitle:
  *                   type: string
  *                   example: "編輯的標題"
- *                 newsContent:
+ *                 NewsContent:
  *                   type: string
  *                   example: "編輯的內容"
- *                 newsStatus:
+ *                 NewsStatus:
  *                   type: int
  *                   example: 0
  *                 

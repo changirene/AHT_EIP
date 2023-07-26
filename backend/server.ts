@@ -1,19 +1,24 @@
 import express from 'express';
 import {newsRouter} from "./router/news.router";
+import {memberRouter} from "./router/member.router"
 import {homepage} from "./controller/homepage.controller";
 import {managementInterfaceRouter} from "./router/managementInterface.router";
 import swaggerJsDoc from 'swagger-jsdoc';
 import {sequelize} from "./db_connect";
 import {News} from "./model/news.model";
+import {Member} from "./model/member.model"
 import * as bodyParser from 'body-parser';
 import path from "path";
 import * as swaggerUi from 'swagger-ui-express';
 import dotenv from "dotenv";
 import { Request, Response } from 'express';
 import cors from 'cors';
+import cookieParser from 'cookie-parser';
+
 
 dotenv.config();
 sequelize.addModels([News]);
+sequelize.addModels([Member]);
 
 const swaggerOptions = {
     definition: {
@@ -35,6 +40,8 @@ const swaggerOptions = {
 const swaggerDocs = swaggerJsDoc(swaggerOptions);
 
 const app: any = express();
+
+app.use(cookieParser());
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -43,7 +50,7 @@ app.use(express.static(process.cwd() + "/frontend/dist"))
 app.get('/', homepage);
 app.use('/', managementInterfaceRouter)
 app.use('/', newsRouter);
-
+app.use('/', memberRouter);
 
 
 process.on('uncaughtException', (err, origin) => {
