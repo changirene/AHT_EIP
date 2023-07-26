@@ -1,4 +1,5 @@
 import express from 'express';
+import { Request, Response } from 'express';
 import {newsRouter} from "./router/news.router";
 import {memberRouter} from "./router/member.router"
 import {homepage} from "./controller/homepage.controller";
@@ -11,7 +12,6 @@ import * as bodyParser from 'body-parser';
 import path from "path";
 import * as swaggerUi from 'swagger-ui-express';
 import dotenv from "dotenv";
-import { Request, Response } from 'express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 
@@ -47,6 +47,11 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 app.use(express.static(process.cwd() + "/frontend/dist"))
+app.all("*", async (req: Request, res: Response) => {
+    res.header('Access-Control-Allow-Origin', 'https://example.com');
+    // 允许发送凭据信息
+    res.header('Access-Control-Allow-Credentials', 'true');
+})
 app.get('/', homepage);
 app.use('/', managementInterfaceRouter)
 app.use('/', newsRouter);
