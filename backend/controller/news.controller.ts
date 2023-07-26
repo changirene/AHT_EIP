@@ -14,7 +14,7 @@ interface getData{
 const getNews: (req: Request, res: Response) => Promise<void> = async (req: Request, res: Response) => {
     //取得標題、id、時間
     try{
-        res.setHeader('Access-Control-Allow-Origin', '*');
+        
         const result = await News.findAll({
             attributes: [
                 'NewsId', 
@@ -59,7 +59,7 @@ const getNews: (req: Request, res: Response) => Promise<void> = async (req: Requ
 const putNews: (req: Request, res: Response) => Promise<void> = async (req: Request, res: Response) => {
     //新增
     try{
-        res.setHeader('Access-Control-Allow-Origin', '*');
+        
         // let newsId: any;
         // const redisTotalCount: number = 168;
         // const listLength: number = await redis.llen("newsTitle:list");
@@ -117,7 +117,7 @@ const putNews: (req: Request, res: Response) => Promise<void> = async (req: Requ
 const deleteNews: (req: Request, res: Response) => Promise<void> = async (req: Request, res: Response) => {
     //delete mysql's data and redis's data
     try{
-        res.setHeader('Access-Control-Allow-Origin', '*');
+        
         await News.destroy({
             where: {
                 NewsId: parseInt(req.body.NewsId)
@@ -148,7 +148,7 @@ const deleteNews: (req: Request, res: Response) => Promise<void> = async (req: R
 const patchNews: (req: Request, res: Response) => Promise<void> = async (req: Request, res: Response) => {
     //編輯
     try{
-        res.setHeader('Access-Control-Allow-Origin', '*');
+        
         if(req.body.NewsTitle){
             await News.update(
                 {
@@ -197,7 +197,7 @@ const patchNews: (req: Request, res: Response) => Promise<void> = async (req: Re
 const postNews: (req: Request, res: Response) => Promise<void> = async (req: Request, res: Response) => {
     //取得消息動態的文章內容
     try{
-        res.setHeader('Access-Control-Allow-Origin', '*');
+        
         const result = await News.findOne({
             where: {
               NewsId: req.body.NewsId

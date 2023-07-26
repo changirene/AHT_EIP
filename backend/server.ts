@@ -40,19 +40,12 @@ const swaggerOptions = {
 const swaggerDocs = swaggerJsDoc(swaggerOptions);
 
 const app: any = express();
-app.use(cors({credentials: true, origin: true}));
+app.use(cors({credentials: true, origin: "http://localhost:8080", preflightContinue: true}));
 app.use(cookieParser());
-
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 app.use(express.static(process.cwd() + "/frontend/dist"))
-app.use((req: Request, res: Response) => {
-    res.header('Access-Control-Allow-Origin', '*');
-    res.header('Access-Control-Allow-Credentials', 'true');
-    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
-    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-});
 app.get('/', homepage);
 app.use('/', managementInterfaceRouter)
 app.use('/', newsRouter);

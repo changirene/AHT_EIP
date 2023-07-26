@@ -24,7 +24,7 @@ const login: (req: Request, res: Response) => Promise<void> = async (req: Reques
             })
         }
         const token: string = "login: true";
-        const expireTime: Date = new Date(Date.now() + 3600000 * 24 * 7);
+        const expireTime: Date = new Date(Date.now() + 3600000 * 24 * 30);
         res.cookie('token', token, { httpOnly: true, expires: expireTime })
        
         
