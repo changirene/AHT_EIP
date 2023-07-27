@@ -19,6 +19,8 @@ import cookieParser from 'cookie-parser';
 dotenv.config();
 sequelize.addModels([News]);
 sequelize.addModels([Member]);
+const port = process.env.port
+const cookieSecretKey = process.env.cookieSecretKey
 
 const swaggerOptions = {
     definition: {
@@ -31,7 +33,7 @@ const swaggerOptions = {
         },
         servers: [
             {
-                url: "http://localhost:3000"
+                url: `http://localhost:${port}`
             }
         ]
     },
@@ -41,7 +43,7 @@ const swaggerDocs = swaggerJsDoc(swaggerOptions);
 
 const app: any = express();
 app.use(cors({credentials: true, origin: "http://localhost:8080", preflightContinue: true}));
-app.use(cookieParser());
+app.use(cookieParser(cookieSecretKey));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
@@ -62,6 +64,6 @@ process.on('uncaughtException', (err, origin) => {
 
 
 
-app.listen(3000, () => {
+app.listen(port, () => {
     console.log('Server is running on port 3000');
   });

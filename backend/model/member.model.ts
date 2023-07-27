@@ -8,6 +8,12 @@ import { Table, Column, Model } from 'sequelize-typescript';
 })
 export class Member extends Model {
     @Column({
+      primaryKey: true,
+      autoIncrement: true
+    })
+    member_id!: number
+
+    @Column({
       allowNull: false
     })
     account!: string;
