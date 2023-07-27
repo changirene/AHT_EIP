@@ -323,7 +323,7 @@
 
 /**
  * @swagger
- * /login:
+ * /confirm/login:
  *  get:
  *      tags:
  *        - Auth
