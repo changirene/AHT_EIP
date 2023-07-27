@@ -48,8 +48,8 @@ const login: (req: Request, res: Response) => Promise<void> = async (req: Reques
 const confirmLogin: (req: Request, res: Response) => Promise<void> = async (req: Request, res: Response) => {
     try{
         const cookie = req.signedCookies.token;
-        if(cookie === undefined){
-            //cookie被竄改過的話，cookie也會變undefined
+        if(cookie === undefined || cookie === false){
+            //cookie被竄改過的話，cookie的值會變成false
             res.clearCookie('token');
             res.status(400).send({
                 status: 'error',
