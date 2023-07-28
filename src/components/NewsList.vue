@@ -14,8 +14,8 @@
       
       <div class="news-pagination">
         <span
-        v-if="page != 1"
-        class="pages__button_prev"
+        v-if="page > 1 && newsList.length > 0"
+        class="pages_button_prev"
         @click="setPage(page - 1)"
         >
         &lt;
@@ -24,13 +24,13 @@
           v-for="p in pages"
           :key="p.id"
           @click="setPage(p)"
-          :class="{ pages__button: true, 'pages__button--active': p == page }"
+          :class="{ pages_button: true, 'pages_button--active': p == page }"
         >
           {{ p }}
         </span>
         <span
-          v-if="page != pages.length"
-          class="pages__button_next"
+          v-if="page < pages.length && newsList.length > 0"
+          class="pages_button_next"
           @click="setPage(page + 1)"
         >
           &gt;
@@ -109,7 +109,7 @@ export default {
       .then((res) => {
         const filteredData = res.data.data.filter(data => data.NewsStatus === 1);
         this.newsList = filteredData.slice(0, 28);
-        console.log(typeof(this.newsList));
+        // console.log(this.newsList);
         let pagesAmount = Math.ceil(this.newsList.length / this.perPage);
         for (let i = 1; i <= pagesAmount; i++) {
           this.pages.push(i);
@@ -181,7 +181,7 @@ export default {
       bottom: 0;
       left: 0;
       right: 0;
-      .pages__button, .pages__button_prev, .pages__button_next {
+      .pages_button, .pages_button_prev, .pages_button_next {
         cursor: pointer;
         font-size: 0.9em;
         background-color: $light;
@@ -192,7 +192,7 @@ export default {
         margin: 5px;
       }
   
-      .pages__button:hover, .pages__button--active {
+      .pages_button:hover, .pages_button--active {
         background-color: $primary;
         color: #fff;
       }
