@@ -11,31 +11,31 @@
           ...more
         </button>
       </div>
+      
       <div class="news-pagination">
         <span
-      v-if="page != 1"
-      class="pages__button_prev"
-      @click="setPage(page - 1)"
-    >
-      &lt;
-    </span>
-    <span
-      v-for="p in pages"
-      :key="p.id"
-      @click="setPage(p)"
-      :class="{ pages__button: true, 'pages__button--active': p == page }"
-    >
-      {{ p }}
-    </span>
-    <span
-      v-if="page != pages.length"
-      class="pages__button_next"
-      @click="setPage(page + 1)"
-    >
-      &gt;
-    </span>
+        v-if="page > 1 && newsList.length > 0"
+        class="pages_button_prev"
+        @click="setPage(page - 1)"
+        >
+        &lt;
+        </span>
+        <span
+          v-for="p in pages"
+          :key="p.id"
+          @click="setPage(p)"
+          :class="{ pages_button: true, 'pages_button--active': p == page }"
+        >
+          {{ p }}
+        </span>
+        <span
+          v-if="page < pages.length && newsList.length > 0"
+          class="pages_button_next"
+          @click="setPage(page + 1)"
+        >
+          &gt;
+        </span>
       </div>
-
     </div>
   </div>
 
@@ -49,7 +49,6 @@
         </div>
         <div class="popup-content">
           <p v-html="popupData.NewsContent"></p>
-          <!-- <p v-html="popupContent.newsContent"></p> -->
           <!-- 在需要換行的地方加入<br> -->
         </div>
         <button type="button" @click="close()">關閉</button>
@@ -78,14 +77,6 @@ export default {
   methods: {
     open(id) {
       this.activeId = id;
-        // axios.post(`${url}/news/content`,{ params: { newsId: id } })
-        //   .then((res) => {
-        //   this.Content = res.data.data; 
-        //   console.log(this.Content);
-        //   })
-        //   .catch(err => {
-        //     console.dir(err);
-        //   });
     },
     close() {
       this.activeId = NaN;
@@ -96,8 +87,7 @@ export default {
         let minI = this.perPage * this.page - this.perPage;
         let maxI = this.perPage * this.page;
         this.list.length = 0;
-        // this.list = this.newsList.slice(minI, maxI);
-        for (let i = minI; i < maxI && i < this.newsList.length; i++) {
+        for (let i = minI; i < maxI && i < this.newsList.length ; i++) {
           this.list.push(this.newsList[i]);
         }
       }
@@ -112,26 +102,24 @@ export default {
     popupData() {
       return this.newsList.find((n) => n.NewsId === this.activeId) || {};
     },
-    // popupContent(){
-    //   return this.Content.find((n)=>n.NewsId === this.activeId) || {};
-    // }
 
   },
   mounted() {
     axios.get(`${url}/news`)
       .then((res) => {
-        this.newsList = res.data.data; // 將 API 回傳的資料指派給 newsList 陣列
-        console.log(this.newsList);
+        const filteredData = res.data.data.filter(data => data.NewsStatus === 1);
+        this.newsList = filteredData.slice(0, 28);
+        // console.log(this.newsList);
         let pagesAmount = Math.ceil(this.newsList.length / this.perPage);
         for (let i = 1; i <= pagesAmount; i++) {
           this.pages.push(i);
         }
 
-      this.setPage(1);
-      })
-      .catch(err => {
-        console.dir(err);
-      });
+        this.setPage(1);
+        })
+        .catch(err => {
+          console.dir(err);
+        });
 },
 }
 </script>
@@ -153,6 +141,8 @@ export default {
 
   .news {
     @include news-border;
+    height: 440px;
+    position: relative;
     .news-title {
       h2 {
         font-size: 1.2em;
@@ -186,9 +176,12 @@ export default {
     .news-pagination {
       display: flex;
       justify-content: center;
-      align-items: center;
       margin: 5px;
-      .pages__button, .pages__button_prev, .pages__button_next {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      .pages_button, .pages_button_prev, .pages_button_next {
         cursor: pointer;
         font-size: 0.9em;
         background-color: $light;
@@ -198,8 +191,8 @@ export default {
         border-radius: 50%;
         margin: 5px;
       }
-
-      .pages__button:hover, .pages__button--active {
+  
+      .pages_button:hover, .pages_button--active {
         background-color: $primary;
         color: #fff;
       }

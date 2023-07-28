@@ -71,4 +71,21 @@ const confirmLogin: (req: Request, res: Response) => Promise<void> = async (req:
 
 }
 
-export{login, confirmLogin};
+const logout: (req: Request, res: Response) => Promise<void> = async (req: Request, res: Response) => {
+    try{
+        res.clearCookie('token');
+        res.status(200).send({
+            status: "success",
+            message: "登出成功"
+        })
+    }catch(err){
+        res.status(500).send({
+            status: "success",
+            message: "伺服器發生錯誤，登出失敗"
+        })
+    }
+    
+}
+
+
+export{login, confirmLogin, logout};
