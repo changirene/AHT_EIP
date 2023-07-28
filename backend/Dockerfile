@@ -10,7 +10,7 @@ COPY . /usr/src/app
 
 COPY --from=frontend /usr/src/app/ /usr/src/app/frontend
 
-COPY --from=managementInterface /usr/src/app/ /usr/src/app/managementInterface
+COPY --from=management_interface /usr/src/app/ /usr/src/app/managementInterface
 
 EXPOSE 3000
 
