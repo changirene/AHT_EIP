@@ -1,5 +1,5 @@
 import { Table, Column, Model } from 'sequelize-typescript';
-import { DataTypes } from 'sequelize';
+import { DataTypes, TinyIntegerDataType } from 'sequelize';
 import { Sequelize } from 'sequelize-typescript';
 
 

@@ -1,10 +1,8 @@
 import { Request, Response } from 'express';
 import {News} from "../model/news.model";
-import {sequelize} from "../db_connect";
 import moment from 'moment-timezone';
-import axoios from 'axios';
 const { literal,fn } = require('sequelize');
-sequelize.addModels([News]);
+// sequelize.addModels([News]);
 moment.tz.setDefault('Asia/Taipei');
 
 interface getData{
@@ -16,16 +14,13 @@ interface getData{
 const getNews: (req: Request, res: Response) => Promise<void> = async (req: Request, res: Response) => {
     //取得標題、id、時間
     try{
-        res.setHeader('Access-Control-Allow-Origin', '*');
         const result = await News.findAll({
-            where: {
-                NewsStatus: 0
-            },
             attributes: [
                 'NewsId', 
                 'NewsTitle', 
                 [literal('SUBSTRING(NewsAddDate, 1, 10)'), 'NewsAddDate'],
-                'NewsContent'
+                'NewsContent',
+                'NewsStatus'
             ],
             order: [['NewsId', 'DESC']]
         });
@@ -63,50 +58,45 @@ const getNews: (req: Request, res: Response) => Promise<void> = async (req: Requ
 const putNews: (req: Request, res: Response) => Promise<void> = async (req: Request, res: Response) => {
     //新增
     try{
-        res.setHeader('Access-Control-Allow-Origin', '*');
-        let newsId: any;
+        // let newsId: any;
         // const redisTotalCount: number = 168;
         // const listLength: number = await redis.llen("newsTitle:list");
         // if(listLength >= redisTotalCount){
         //     newsId = await redis.lrange("newsTitle:list", -1, -1); //取得下架的id
         //     await redis.ltrim("newsTitle:list", 0, 164); //只保留前165個data
-        let newsStatusNum: any;
-        newsStatusNum = await News.findOne({
-            attributes: [
-                [literal('SUM(NewsStatus=0)'), 'NewsStatus']
-            ], 
-        })
-        if(newsStatusNum.dataValues.NewsId >= 56){
-            newsId = await News.findOne({
-                where:{
-                    NewsStatus:0
-                },
-                attributes: [
-                    [literal('MIN(NewsId)'), 'NewsId']
-                ], 
+        // let newsStatusNum: any;
+        // newsStatusNum = await News.findOne({
+        //     attributes: [
+        //         [literal('SUM(NewsStatus=0)'), 'NewsStatus']
+        //     ], 
+        // })
+
+        // if(newsStatusNum.dataValues.NewsStatus >= 56){
+        //     newsId = await News.findOne({
+        //         where:{
+        //             NewsStatus:0
+        //         },
+        //         attributes: [
+        //             [literal('MIN(NewsId)'), 'NewsId']
+        //         ], 
                 
-            })
+        //     })
 
-            await News.update( //下架news
-                {
-                    NewsStatus: 1
-                },
-                {
-                    where: {NewsId: newsId.dataValues.NewsId}
-                }
-            )
-
-        }
-
-
-
-       
+        //     await News.update( //下架news
+        //         {
+        //             NewsStatus: 1
+        //         },
+        //         {
+        //             where: {NewsId: newsId.dataValues.NewsId}
+        //         }
+        //     )
+        // }
 	    const currentTime = moment();
 	    const date = currentTime.format().substring(0,10) + " " + currentTime.format().substring(11,19);
         const createdNews  = await News.create({
-	    NewsAddDate: date,
-            NewsTitle: req.body.newsTitle,
-            NewsContent: req.body.newsContent
+            NewsAddDate: date,
+            NewsTitle: req.body.NewsTitle,
+            NewsContent: req.body.NewsContent
         })
         const { NewsId, NewsAddDate } = createdNews;
         // await redis.lpush("newsTitle:list", createdNews.NewsId, req.body.newsTitle, date);
@@ -125,10 +115,9 @@ const putNews: (req: Request, res: Response) => Promise<void> = async (req: Requ
 const deleteNews: (req: Request, res: Response) => Promise<void> = async (req: Request, res: Response) => {
     //delete mysql's data and redis's data
     try{
-        res.setHeader('Access-Control-Allow-Origin', '*');
         await News.destroy({
             where: {
-                NewsId: parseInt(req.body.newsId)
+                NewsId: parseInt(req.body.NewsId)
             }
         })
         // const results: string[] = await redis.lrange("newsTitle:list", 0, -1);
@@ -156,27 +145,36 @@ const deleteNews: (req: Request, res: Response) => Promise<void> = async (req: R
 const patchNews: (req: Request, res: Response) => Promise<void> = async (req: Request, res: Response) => {
     //編輯
     try{
-        res.setHeader('Access-Control-Allow-Origin', '*');
-        if(req.body.newsTitle){
+        if(req.body.NewsTitle){
             await News.update(
                 {
-                    NewsTitle: req.body.newsTitle
+                    NewsTitle: req.body.NewsTitle
                 },
                 {
-                    where: {NewsId: req.body.newsId}
+                    where: {NewsId: req.body.NewsId}
                 }
             )
             // const results: string[] = await redis.lrange("newsTitle:list", 0, -1);
             // const titleIndex: number = results.indexOf(`${req.body.newsId}`) - 1;
             // await redis.lset("newsTitle:list", titleIndex, req.body.newsTitle); //更新redis title
         }
-        if(req.body.newsContent){
+        if(req.body.NewsContent){
             await News.update(
                 {
-                    NewsContent: req.body.newsContent
+                    NewsContent: req.body.NewsContent
                 },
                 {
-                    where: {NewsId: req.body.newsId}
+                    where: {NewsId: req.body.NewsId}
+                }
+            )
+        }
+        if(req.body.NewsStatus != undefined){
+            await News.update(
+                {
+                    NewsStatus: req.body.NewsStatus
+                },
+                {
+                    where: {NewsId: req.body.NewsId}
                 }
             )
         }
@@ -195,10 +193,9 @@ const patchNews: (req: Request, res: Response) => Promise<void> = async (req: Re
 const postNews: (req: Request, res: Response) => Promise<void> = async (req: Request, res: Response) => {
     //取得消息動態的文章內容
     try{
-        res.setHeader('Access-Control-Allow-Origin', '*');
         const result = await News.findOne({
             where: {
-              NewsId: req.body.newsId
+              NewsId: req.body.NewsId
             },
             attributes: ['NewsContent'],
           });
