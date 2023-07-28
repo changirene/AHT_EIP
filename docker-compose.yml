@@ -16,7 +16,7 @@ services:
     image: frontend 
   
   managementInterface:
-    image: managementInterface
+    image: management_interface
   
   backend:
     image: backend
