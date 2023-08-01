@@ -141,7 +141,7 @@ export default {
 
   .news {
     @include news-border;
-    height: 440px;
+    height: 450px;
     position: relative;
     .news-title {
       h2 {
@@ -154,7 +154,7 @@ export default {
     .news-content {
       display: flex;
       align-items: center;
-      margin: 5px 20px;
+      margin: 5.5px 20px;
       padding-bottom: 2px;
       border-bottom: 1px solid black;
       .news-date {
