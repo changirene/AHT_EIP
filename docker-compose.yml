@@ -1,0 +1,26 @@
+version: '3'
+services:
+  nginx:
+    build: ./nginx
+    depends_on:
+      - backend
+    ports:
+      - 80:80
+
+  # redis:
+  #   image: redis
+  #   ports:
+  #     - 6379:6379
+  
+  frontend:
+    image: frontend 
+  
+  managementInterface:
+    image: managementInterface
+  
+  backend:
+    image: backend
+    ports:
+      - 3000:3000
+  
+

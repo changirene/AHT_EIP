@@ -107,7 +107,7 @@ export default {
   mounted() {
     axios.get(`${url}/news`)
       .then((res) => {
-        const filteredData = res.data.data.filter(data => data.NewsStatus === 0);
+        const filteredData = res.data.data.filter(data => data.NewsStatus === 1);
         this.newsList = filteredData.slice(0, 28);
         // console.log(this.newsList);
         let pagesAmount = Math.ceil(this.newsList.length / this.perPage);
@@ -141,7 +141,7 @@ export default {
 
   .news {
     @include news-border;
-    height: 450px;
+    height: 440px;
     position: relative;
     .news-title {
       h2 {
@@ -154,7 +154,7 @@ export default {
     .news-content {
       display: flex;
       align-items: center;
-      margin: 5.5px 20px;
+      margin: 5px 20px;
       padding-bottom: 2px;
       border-bottom: 1px solid black;
       .news-date {
