@@ -103,7 +103,11 @@
  *                       type: string
  *                       example: "使用者尚未登入"
  *          "500":
+<<<<<<< HEAD
  *             description: 伺服器內部發生錯誤
+=======
+ *             description: 伺服器內部錯誤，登入失敗
+>>>>>>> 3147c996ea1aec30312398d422c19619bbe1d153
  *             content:
  *               application/json:
  *                 schema:
@@ -125,7 +129,11 @@
  *      tags:
  *        - Auth
  *
+<<<<<<< HEAD
  *      description: 使用者登出，刪除使用者cookie紀錄
+=======
+ *      description: 讓使用者登出，刪除使用者cookie紀錄
+>>>>>>> 3147c996ea1aec30312398d422c19619bbe1d153
  *                 
  *      responses:
  *          "200":
@@ -143,7 +151,11 @@
  *                       example: "登出成功"
  *            
  *          "500":
+<<<<<<< HEAD
  *             description: 伺服器內部錯誤，登出失敗
+=======
+ *             description: 伺服器內部錯誤，登入失敗
+>>>>>>> 3147c996ea1aec30312398d422c19619bbe1d153
  *             content:
  *               application/json:
  *                 schema:

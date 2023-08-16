@@ -26,7 +26,11 @@
  *                             example: 1
  *                           NewsAddDate: 
  *                             type: string
+<<<<<<< HEAD
  *                             example: "2023-06-21"
+=======
+ *                             example: "2023-06-21 11:57:30"
+>>>>>>> 3147c996ea1aec30312398d422c19619bbe1d153
  *                           NewsTitle:
  *                             type: string
  *                             example: "這是消息動態的標題"
@@ -134,7 +138,10 @@
  *                     status:
  *                       type: string
  *                       example: "success"
+<<<<<<< HEAD
  *         
+=======
+>>>>>>> 3147c996ea1aec30312398d422c19619bbe1d153
  *            
  *          "500":
  *             description: 伺服器內部錯誤，新增失敗

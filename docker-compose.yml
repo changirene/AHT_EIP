@@ -1,6 +1,16 @@
 version: '3'
 services:
+<<<<<<< HEAD
   
+=======
+  nginx:
+    build: ./nginx
+    depends_on:
+      - backend
+    ports:
+      - 80:80
+
+>>>>>>> 3147c996ea1aec30312398d422c19619bbe1d153
   # redis:
   #   image: redis
   #   ports:
@@ -10,7 +20,11 @@ services:
     image: frontend 
   
   managementInterface:
+<<<<<<< HEAD
     image: managementinterface
+=======
+    image: managementInterface
+>>>>>>> 3147c996ea1aec30312398d422c19619bbe1d153
   
   backend:
     image: backend
