@@ -1,7 +1,7 @@
 <template>
   
     <div class="container">
-      <router-view/>
+      <router-view v-if="isRouterAlive" />
     </div>
     <div class="background">
     <img class="lt" :src="require('@/assets/images/lt.png')">
@@ -15,8 +15,25 @@
       },
       data () {
         return {
+          isRouterAlive: true,
         }
-      }
+      },
+      provide(){
+        return{
+          reload: this.reload
+        }
+      },
+      methods: {
+        async reload(){
+          // console.log('reload!');
+          this.isRouterAlive = false;
+          await this.$nextTick();
+          this.isRouterAlive = true;
+          // this.$nextTick(()=>{
+          //   this.isRouterAlive = true;
+          // })
+        }
+      },
     }
 </script>
 <style lang="scss">
@@ -47,6 +64,4 @@
     right: 0;
   }
 }
-
-
 </style>

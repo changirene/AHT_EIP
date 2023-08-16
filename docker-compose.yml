@@ -1,12 +1,6 @@
 version: '3'
 services:
-  nginx:
-    build: ./nginx
-    depends_on:
-      - backend
-    ports:
-      - 80:80
-
+  
   # redis:
   #   image: redis
   #   ports:
@@ -16,7 +10,7 @@ services:
     image: frontend 
   
   managementInterface:
-    image: management_interface
+    image: managementinterface
   
   backend:
     image: backend
