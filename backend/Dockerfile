@@ -10,11 +10,8 @@ COPY . /usr/src/app
 
 COPY --from=frontend /usr/src/app/ /usr/src/app/frontend
 
-<<<<<<< HEAD
 COPY --from=managementinterface /usr/src/app/ /usr/src/app/managementInterface
 
-=======
->>>>>>> 3147c996ea1aec30312398d422c19619bbe1d153
 EXPOSE 3000
 
 RUN npm install -g nodemon
