@@ -7,7 +7,7 @@ dotenv.config();
 
 const managementInterface: (req: Request, res: Response) => Promise<void> = async (req: Request, res: Response) => {
     try {      
-      res.sendFile(path.join(__dirname, "/../frontend/dist/index.html"))
+      res.sendFile(path.join(__dirname, "/../managementInterface/dist/index.html"))
     } catch (err) {
       res.status(500).send({
         status: 'error',

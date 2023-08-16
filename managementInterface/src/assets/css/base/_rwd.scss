@@ -1,0 +1,32 @@
+//RWD
+$pc-media:1200px;
+$pc-l-media:1024px;
+$pad-media:768px;
+$phone-media:576px;
+
+//pc 1200px
+@mixin pc-width(){
+    @media screen and (min-width: $pc-media) {
+        @content;
+    }
+};
+//pc 1024px
+@mixin pc-l-width(){
+    @media screen and (min-width: $pc-l-media) {
+        @content;
+    }
+};
+
+//pad 768px
+@mixin pad-width(){
+    @media screen and (min-width: $pad-media) {
+        @content;
+    }
+};
+
+//phone 576px
+@mixin phone-width(){
+    @media screen and (min-width: $phone-media) {
+        @content;
+    }
+};

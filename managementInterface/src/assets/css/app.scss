@@ -1,0 +1,57 @@
+
+// Base
+@import 'base/basic.scss';
+@import 'base/reset.scss';
+@import 'base/rwd.scss';
+
+//表格標題
+.custom-table .ivu-table .ivu-table-header, .ivu-table-sort .ivu-icon, .ivu-table-tbody{
+    color: #057DCD;
+}
+.custom-table .ivu-table .ivu-table-header{
+    font-size: 17px;
+    font-weight: bold;
+}
+.ivu-table:before{
+    background: none;
+}
+
+.ivu-table-tbody{
+    font-size: 15px;
+}
+
+.ivu-table-stripe .ivu-table-body tr:nth-child(2n) td, .ivu-table-stripe .ivu-table-fixed-body tr:nth-child(2n) td{
+    background-color:#F0FAFF;
+}
+
+.ivu-table-header{
+    background-color:#F0FAFF;
+}
+
+// 按鈕
+.ivu-btn-primary{
+    height: 30px;
+    line-height: 30px;
+    background-color: #057DCD;
+    border-color: #057DCD;
+    border-radius: 20px;
+    padding: 0 20px;
+    font-weight: bold;
+  }
+  .ivu-btn-error{
+      background-color: #fff;
+      color: red;
+      border-radius: 20px;
+      font-weight: bold;
+      padding: 0 20px;
+  }
+  
+
+// 文字框
+textarea.ivu-input{
+    min-height:150px;
+    height:150px;
+}
+.ivu-table-wrapper{
+    overflow: visible;
+}

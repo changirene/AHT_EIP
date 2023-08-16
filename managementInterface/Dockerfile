@@ -1,4 +1,4 @@
-FROM node:18.16.0 AS managementInterface
+FROM node:18.16.0 AS managementinterface
 
 WORKDIR /usr/src/app
 

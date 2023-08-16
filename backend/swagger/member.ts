@@ -103,7 +103,7 @@
  *                       type: string
  *                       example: "使用者尚未登入"
  *          "500":
- *             description: 伺服器內部錯誤，登入失敗
+ *             description: 伺服器內部發生錯誤
  *             content:
  *               application/json:
  *                 schema:
@@ -125,7 +125,7 @@
  *      tags:
  *        - Auth
  *
- *      description: 讓使用者登出，刪除使用者cookie紀錄
+ *      description: 使用者登出，刪除使用者cookie紀錄
  *                 
  *      responses:
  *          "200":
@@ -143,7 +143,7 @@
  *                       example: "登出成功"
  *            
  *          "500":
- *             description: 伺服器內部錯誤，登入失敗
+ *             description: 伺服器內部錯誤，登出失敗
  *             content:
  *               application/json:
  *                 schema:

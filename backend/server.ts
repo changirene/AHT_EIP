@@ -48,6 +48,9 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 app.use(express.static(process.cwd() + "/frontend/dist"))
+app.use(express.static(process.cwd() + "/managementInterface/dist"))
+
+
 app.get('/', homepage);
 app.use('/', managementInterfaceRouter)
 app.use('/', newsRouter);
